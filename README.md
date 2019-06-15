@@ -1,5 +1,5 @@
 
-![](name-of-giphy.gif)
+![demo](demo.gif)
 
 # Spotify Accounts Authentication + Building Playlist Based on User's Top Songs
 
