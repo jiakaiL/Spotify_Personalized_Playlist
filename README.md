@@ -1,3 +1,6 @@
+
+![](name-of-giphy.gif)
+
 # Spotify Accounts Authentication + Building Playlist Based on User's Top Songs
 
 This project contains basic Authentiacation from the tutorial codes from Spotify Web API for [authenticating against the Spotify Web API](https://developer.spotify.com/web-api/authorization-guide/).
@@ -33,5 +36,6 @@ In order to run the different examples, open the folder with the name of the flo
     $ node app.js
 
 Then, open `http://localhost:8888` in a browser.
+
 
 
