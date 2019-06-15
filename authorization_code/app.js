@@ -22,6 +22,7 @@ var client_id = 'dbdfa179b5c24e1a9dc51a3c7fe66eb3'; // Your client id
 var client_secret = 'a4c846230dce4a2088e49b6b71e21805'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+//12172962695  for example
 var userID = '12172962695'; // this is the spotify userID, change it to the user's playlist you want to modify
 
 var country = 'CA';  // country market
@@ -103,8 +104,6 @@ app.get('/callback', function(req, res) {
 
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
-
-        console.log(access_token);
         // get top_tracks 
         var track_url = 'https://api.spotify.com/v1/me/top/tracks';
         var option = {
@@ -202,10 +201,10 @@ app.get('/callback', function(req, res) {
         		var obj_exclude = {};
         		for (let song of top_tracks){
         			obj_exclude[Object.keys(song)[0]] = Object.values(song)[0]; 
-        		}	
+        		}
+        		console.log("exclusion song list: ", Object.keys(obj_exclude));
         		async.map(listTODO, httpGet, function(err, res){
         			if (err) return console.log(err);
-        			console.log(res[0].tracks.length);
         			for (let one of res) {
         				for (let song of one.tracks){
         					var track = {};
@@ -222,25 +221,14 @@ app.get('/callback', function(req, res) {
         			}
         			var json_urls = {};
         			json_urls['uris'] = Object.values(obj_add);
-        			// var option_add_songs = {
-        			// 	url: 'https://api.spotify.com/v1/playlists/{playlist_id}/tracks'
-        			// 	body: json_urls,
-        			// 	headers: {
-        			// 	'Authorization' : 'Bearer ' + token
-        			// 	},
-        			// 	json: true
-        			// }
 
         			request.get(option_get_list, function(error, res, body){
-        				// console.log(body);
         				var user_playlist = {}
         				for (let list of body.items){
         					user_playlist[list.name] = list.id;
         				}
-        				// console.log(user_playlist);
         				if (Object.keys(user_playlist).includes(cust_playlist)){
         					var del_list_url = 'https://api.spotify.com/v1/playlists/'+ user_playlist[cust_playlist]+'/followers' //unfollow or delete playlist
-        					// console.log(del_list_url);
         					var option_del_list = {
         						url: del_list_url,
         						headers: {
@@ -249,8 +237,9 @@ app.get('/callback', function(req, res) {
         						json: true
         					};
         					request.delete(option_del_list);
+        					console.log("delete existing customization");
         					request.post(option_create_list, function(err, res, body) {
-        						console.log(body.id);
+        						// console.log(body.id);
         						var playlist_id = body.id;
         						var option_playlist_add_track = {
         							url: 'https://api.spotify.com/v1/playlists/' + playlist_id+'/tracks',
@@ -265,7 +254,7 @@ app.get('/callback', function(req, res) {
         					});
         				} else {
         					request.post(option_create_list, function(err, res, body) {
-        						console.log(body.id);
+        						// console.log(body.id);
         						var playlist_id = body.id;
         						var option_playlist_add_track = {
         							url: 'https://api.spotify.com/v1/playlists/' + playlist_id+'/tracks',
@@ -277,7 +266,7 @@ app.get('/callback', function(req, res) {
         							json: true
         						}
         						request.post(option_playlist_add_track);
-        						console.log(option_playlist_add_track);
+        						// console.log(option_playlist_add_track);
         						console.log('add tracks successfully')
         					});
         				}
